@@ -1,7 +1,7 @@
 # Student Grievance Management System
 
-## Introduction
-Centralised Grievance management website (add stuff later)
+## Prototype
+Branch to test out changes and mess with the code a bit
 
 ## Running the App
 ### Client App
@@ -12,6 +12,5 @@ cd client
 npm install 
 npm run dev
 ```
-
-The current available endpoints are /login and /signup
-Forms will be decorated later
+Endpoints: /login /signup \n
+Other endpoints don't exist yet
