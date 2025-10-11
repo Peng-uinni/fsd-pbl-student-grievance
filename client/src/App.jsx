@@ -1,6 +1,6 @@
 import { Route, Routes, BrowserRouter } from "react-router-dom"
-import LoginForm from "./froms/LoginFrom"
-import SignupForm from "./froms/SignupForm"
+import LoginForm from "./forms/LoginFrom"
+import SignupForm from "./forms/SignupForm"
 
 function App(){
     return(
