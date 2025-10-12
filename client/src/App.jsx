@@ -1,6 +1,7 @@
 import { Route, Routes, BrowserRouter } from "react-router-dom"
 import LoginForm from "./forms/LoginFrom"
 import SignupForm from "./forms/SignupForm"
+import MockForm from "./forms/MockForm"
 
 function App(){
     return(
@@ -9,6 +10,7 @@ function App(){
         <Routes>
             <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignupForm />} />
+            <Route path="/mock/form" element={<MockForm />} />
         </Routes>
         </BrowserRouter>
         </>
