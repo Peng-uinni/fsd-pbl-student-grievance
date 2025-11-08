@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Card from './Card';
 import "../urls"
-import { FORM_COMPLAINT_URL } from '../urls';
+import { API_URL } from '../urls';
 
 const CATEGORIES = [
   'Academic',
@@ -20,12 +20,6 @@ const ComplaintForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log('New Complaint Submitted:', {
-    //   subject,
-    //   category,
-    //   description,
-    //   photos: photos ? photos.name : 'No file',
-    // });
 
     const complaintData = {
       subject,
@@ -36,7 +30,7 @@ const ComplaintForm = () => {
 
     //fetch req to backend 
     try{
-      const response = await fetch(FORM_COMPLAINT_URL, {
+      const response = await fetch(API_URL.COMPLAINT_FORM, {
         method: 'POST',
         headers:{
           'Content-Type': 'application/json',

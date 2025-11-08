@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const ComplaintSchema = new mongoose.Schema({
-  // Complaint fields required by the student form
   subject: {
     type: String,
     required: [true, 'Please add a subject for the complaint'],
@@ -17,19 +16,18 @@ const ComplaintSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a detailed description']
   },
-  // Fields for tracking and authorization
   status: {
     type: String,
     enum: ['Pending', 'In Progress', 'Resolved'],
     default: 'Pending'
   },
-  attachments: { // Storing image file paths/URLs (not the files themselves)
+  attachments: { 
     type: [String],
     default: []
   },
-  // User who filed the complaint (Foreign Key/Reference)
+
   userId: {
-    type: String, // Assuming a simple string ID from an auth system
+    type: String, 
     required: true,
   },
   userName: {

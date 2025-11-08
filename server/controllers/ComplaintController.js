@@ -1,12 +1,15 @@
-// complaint_backend/controllers/complaintController.js
 const Complaint = require('../models/Complaint');
 
-// --- Helper function (Mock Authentication) ---
-// In a real application, userId and isAdmin would come from an authentication middleware
-const mockAuth = (req) => {
-    // For demonstration, we'll use a placeholder user ID and role based on query/body
+// --- Utility function to extract user context (MOCK) ---
+// In a real application, this data would be attached to req.user by a 
+// JWT verification middleware after decoding the Authorization: Bearer token.
+// For this environment, we continue to rely on mock headers for context.
+const getUserContext = (req) => {
+    // Assume user ID is passed via header 'x-user-id' and role via 'x-user-role'
     const userId = req.headers['x-user-id'] || 'MOCK_STUDENT_ID';
-    const isAdmin = req.headers['x-user-role'] === 'admin';
+    const role = req.headers['x-user-role'] || 'student';
+    const isAdmin = role === 'admin';
+
     return { userId, isAdmin };
 };
 
@@ -15,7 +18,8 @@ const mockAuth = (req) => {
 // @access  Private (Student)
 exports.createComplaint = async (req, res) => {
     try {
-        const { userId } = mockAuth(req); // Assume student is authenticated
+        // Use the new context utility
+        const { userId } = getUserContext(req); 
         
         // Include user ID in the complaint data
         const complaint = await Complaint.create({
@@ -44,7 +48,7 @@ exports.createComplaint = async (req, res) => {
 // @access  Private (Student)
 exports.getStudentComplaints = async (req, res) => {
     try {
-        const { userId } = mockAuth(req);
+        const { userId } = getUserContext(req);
 
         const complaints = await Complaint.find({ userId }).sort({ createdAt: -1 });
 
@@ -67,12 +71,11 @@ exports.getStudentComplaints = async (req, res) => {
 // @access  Private (Admin)
 exports.getAllComplaints = async (req, res) => {
     try {
-        const { isAdmin } = mockAuth(req);
+        const { isAdmin } = getUserContext(req);
         if (!isAdmin) {
             return res.status(403).json({ success: false, error: 'Access denied. Must be an administrator.' });
         }
 
-        // Admin sees all complaints, ordered by latest first
         const complaints = await Complaint.find().sort({ createdAt: -1 });
 
         res.status(200).json({
@@ -94,7 +97,7 @@ exports.getAllComplaints = async (req, res) => {
 // @access  Private (Admin)
 exports.updateComplaintStatus = async (req, res) => {
     try {
-        const { isAdmin } = mockAuth(req);
+        const { isAdmin } = getUserContext(req);
         if (!isAdmin) {
             return res.status(403).json({ success: false, error: 'Access denied. Must be an administrator.' });
         }
