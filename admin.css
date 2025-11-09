@@ -1,0 +1,15 @@
+/* Admin purple button variant */
+.btn.purple {
+  background-color: #6b21a8; /* Deep purple */
+  color: white;
+}
+
+.btn.purple:hover {
+  background-color: #4c1d95;
+}
+
+/* Optional: make header text color match admin theme */
+.navbar h1 {
+  font-weight: 700;
+  color: white; /* keep consistent with navbar */
+}

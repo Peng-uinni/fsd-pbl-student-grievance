@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grievance Redressal Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo-section">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Portal Logo" class="nav-logo" />
+      <h1>Grievance Redressal Portal</h1>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Help</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h2>Welcome to the <span>Grievance Redressal System</span></h2>
+        <p>
+          A transparent and efficient platform to resolve issues faced by students and staff.
+        </p>
+
+        <div class="role-card-container">
+          <div class="role-card student" onclick="navigate('student.html')">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png" alt="Student Icon" />
+            <h3>Student</h3>
+            <p>Submit and track your grievances easily.</p>
+            <button class="btn blue" onclick="navigate('student.html')">Login as Student</button>
+          </div>
+
+          <div class="role-card admin" onclick="navigate('admin.html')">
+            <img src="https://cdn-icons-png.flaticon.com/512/921/921347.png" alt="Admin Icon" />
+            <h3>Admin</h3>
+            <p>Manage and resolve student grievances efficiently.</p>
+            <button class="btn purple" onclick="navigate('admin.html')">Login as Admin</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 College Grievance Redressal Portal | All Rights Reserved</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
