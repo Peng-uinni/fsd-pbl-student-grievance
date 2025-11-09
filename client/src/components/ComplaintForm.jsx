@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Card from './Card';
 import "../urls"
 import { API_URL } from '../urls';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CATEGORIES = [
   'Academic',
@@ -16,46 +18,73 @@ const ComplaintForm = () => {
   const [subject, setSubject] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [description, setDescription] = useState('');
-  const [photos, setPhotos] = useState(null);
+  const [photos, setPhotos] = useState([]);
+  const { token, user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const complaintData = {
-      subject,
-      category,
-      description,
-      photos: photos ? photos.name : 'No file',
+    // Clear previous messages
+    setSuccessMessage('');
+    setErrorMessage('');
+
+    // Use FormData so the actual file(s) are uploaded (if provided)
+    const form = new FormData();
+    form.append('subject', subject);
+    form.append('category', category);
+    form.append('description', description);
+    if (photos && photos.length) {
+      photos.forEach((file) => form.append('photos', file));
     }
 
-    //fetch req to backend 
-    try{
+    setLoading(true);
+    try {
+      const headers = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const response = await fetch(API_URL.COMPLAINT_FORM, {
         method: 'POST',
-        headers:{
-          'Content-Type': 'application/json',
-          //token/cookie auth here
-          //temp dummy id
-          'x-user-id': '99999',
-        },
-        body: JSON.stringify(complaintData),
+        headers,
+        credentials: 'include',
+        body: form,
       });
 
-      console.log(response);
-    } catch(err){ 
-      console.log(err);
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok) {
+        setSuccessMessage(data.message || 'Complaint submitted successfully. Redirecting...');
+        // Reset form
+        setSubject('');
+        setCategory(CATEGORIES[0]);
+        setDescription('');
+        setPhotos([]);
+
+        // After short delay (allow user to see message), redirect to dashboard
+        setTimeout(() => navigate('/student-dashboard'), 800);
+      } else {
+        setErrorMessage(data.error || `Submission failed (${response.status}).`);
+      }
+    } catch (err) {
+      setErrorMessage(err.message || 'Network error');
+    } finally {
+      setLoading(false);
     }
 
-    // Reset form
-    setSubject('');
-    setCategory(CATEGORIES[0]);
-    setDescription('');
-    setPhotos(null);
   };
 
   return (
-    <Card title="File a New Complaint" style={{ maxWidth: '700px' }}>
+    <Card title="File a New Complaint" style={{ maxWidth: '700px', margin: '40px auto' }}>
       <form onSubmit={handleSubmit}>
+        {successMessage && (
+          <div className="success-message" style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</div>
+        )}
+        {errorMessage && (
+          <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</div>
+        )}
         <div className="form-group">
           <label htmlFor="subject">Subject</label>
           <input
@@ -99,17 +128,17 @@ const ComplaintForm = () => {
             type="file"
             id="photos"
             accept="image/*"
-            onChange={(e) => setPhotos(e.target.files[0])}
+            multiple
+            onChange={(e) => setPhotos(Array.from(e.target.files))}
           />
-          {photos && (
+          {photos && photos.length > 0 && (
             <small style={{ display: 'block', marginTop: '5px' }}>
-              Selected file: **{photos.name}**
+              Selected file{photos.length > 1 ? 's' : ''}: {photos.map(f => f.name).join(', ')}
             </small>
           )}
         </div>
-
-        <button type="submit" style={{ width: '100%', marginTop: '20px' }}>
-          Submit Complaint
+        <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '20px' }}>
+          {loading ? 'Submitting...' : 'Submit Complaint'}
         </button>
       </form>
     </Card>

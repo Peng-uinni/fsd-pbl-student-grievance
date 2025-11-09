@@ -2,16 +2,33 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path')
+const cookieParser = require('cookie-parser');
+
+const bcrypt = require('bcryptjs');
 
 const connectDB = require('./config/db');
 
-dotenv.config({ path: '../.env'}); 
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') }); 
 
 connectDB();
 const app = express();
 
-app.use(cors());  // CORS for frontend API requests
+// Configure CORS to allow Authorization header and cookies
+app.use(cors({
+  origin: 'http://localhost:5173', // Replace with your Vite dev server port
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  credentials: true,
+  exposedHeaders: ['Set-Cookie'],
+}));
+
+// Parse JSON bodies and URL-encoded bodies
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Serve uploaded files (if any)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- Routes ---
 const complaintRoutes = require('./routes/ComplaintRoutes');

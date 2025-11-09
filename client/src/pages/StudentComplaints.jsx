@@ -1,54 +1,62 @@
 import { useEffect, useState } from 'react';
-
 import Card from '../components/Card';
 import ComplaintItem from '../components/ComplaintItem';
-
-// Temp Data
-const tempComplaints = [
-  {
-    id: 1,
-    subject: "Issue with Mid-Term Grading",
-    category: "Academic",
-    status: "In Progress",
-    date: "2023-11-01",
-    description: "The marks for the recent mid-term seem incorrect based on the answer key provided...",
-    adminNote: "Assigned to Prof. K. Sharma for review.",
-  },
-  {
-    id: 2,
-    subject: "Slow WiFi in Library Block",
-    category: "Infrastructure",
-    status: "Resolved",
-    date: "2023-10-25",
-    description: "The internet connection in the central library is consistently slow, making research difficult.",
-    adminNote: "Network hardware replaced on 2023-10-30. Confirmed resolution.",
-  },
-  {
-    id: 3,
-    subject: "Misbehavior by Security Guard",
-    category: "Disciplinary",
-    status: "Pending",
-    date: "2023-11-05",
-    description: "Was improperly questioned by the night guard near the main gate...",
-    adminNote: null,
-  },
-];
+import { API_URL } from '../urls';
+import { useAuth } from '../context/AuthContext';
 
 const StudentComplaints = () => {
-  const [studentComplaints, setStudentComplaints] = useState(tempComplaints);
+  const [studentComplaints, setStudentComplaints] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { getAuthHeader } = useAuth();
 
-  useEffect(()=>{
-    
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        const response = await fetch(API_URL.MY_COMPLAINTS, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            ...getAuthHeader(),
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch complaints: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setStudentComplaints(data.data || []);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching complaints:', err);
+        setError('Failed to load complaints. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchComplaints();
   }, []);
 
   return (
     <main>
       <Card title="My Filed Complaints" style={{ maxWidth: '800px' }}>
-        {studentComplaints.length === 0 ? (
+        {loading ? (
+          <p style={{ textAlign: 'center' }}>Loading complaints...</p>
+        ) : error ? (
+          <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>
+        ) : studentComplaints.length === 0 ? (
           <p style={{ textAlign: 'center' }}>You have not filed any complaints yet.</p>
         ) : (
           studentComplaints.map((complaint) => (
-            <ComplaintItem key={complaint.id} complaint={complaint} />
+            <ComplaintItem 
+              key={complaint._id} 
+              complaint={{
+                ...complaint,
+                date: new Date(complaint.createdAt).toLocaleDateString(),
+              }}
+            />
           ))
         )}
         <div style={{ textAlign: 'center', marginTop: '30px' }}>

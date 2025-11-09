@@ -25,8 +25,8 @@ const NotFound = () => (
 
 const App = () => {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -46,8 +46,8 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 

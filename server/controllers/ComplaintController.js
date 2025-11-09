@@ -1,16 +1,16 @@
 const Complaint = require('../models/Complaint');
 
-// --- Utility function to extract user context (MOCK) ---
-// In a real application, this data would be attached to req.user by a 
-// JWT verification middleware after decoding the Authorization: Bearer token.
-// For this environment, we continue to rely on mock headers for context.
+// Utility function to extract user context.
+// Prefer authenticated user (req.user) set by the `protect` middleware.
+// Fall back to the legacy headers if req.user is not present (backwards compatibility).
 const getUserContext = (req) => {
-    // Assume user ID is passed via header 'x-user-id' and role via 'x-user-role'
-    const userId = req.headers['x-user-id'] || 'MOCK_STUDENT_ID';
-    const role = req.headers['x-user-role'] || 'student';
-    const isAdmin = role === 'admin';
-
-    return { userId, isAdmin };
+    if (!req.user) {
+        throw new Error('User not authenticated');
+    }
+    return { 
+        userId: String(req.user._id || req.user.id), 
+        isAdmin: req.role === 'admin' 
+    };
 };
 
 // @desc    File a new complaint
@@ -19,13 +19,22 @@ const getUserContext = (req) => {
 exports.createComplaint = async (req, res) => {
     try {
         // Use the new context utility
-        const { userId } = getUserContext(req); 
-        
-        // Include user ID in the complaint data
-        const complaint = await Complaint.create({
+        const { userId } = getUserContext(req);
+
+        // Build complaint data from form fields. If files were uploaded via multer,
+        // they will be available on req.files (array).
+        const complaintData = {
             ...req.body,
             userId,
-        });
+        };
+
+        if (req.files && req.files.length) {
+            // Store uploaded filenames (server-side path) for reference
+            complaintData.photos = req.files.map(f => `/uploads/${f.filename}`);
+        }
+
+        // Include user ID in the complaint data
+        const complaint = await Complaint.create(complaintData);
 
         console.log("[CREATE COMPLAINT] SUCCESS");
 

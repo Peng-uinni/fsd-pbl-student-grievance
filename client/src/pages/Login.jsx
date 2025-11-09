@@ -16,9 +16,12 @@ const Login = () => {
     // Redirect authenticated users immediately
     useEffect(()=>{
         if (isAuthenticated) {
-            navigate('/');
+            // If already authenticated, send to appropriate dashboard
+            const role = localStorage.getItem('role');
+            if (role === 'admin') navigate('/admin-dashboard');
+            else navigate('/student-dashboard');
         }
-    }, [])
+    }, [isAuthenticated, navigate])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,7 +30,10 @@ const Login = () => {
 
         try {
             await login(userId, password, role);
-            navigate('/'); // Redirect to home/dashboard on successful login
+            // Read role from localStorage (login stores it) and redirect appropriately
+            const storedRole = localStorage.getItem('role');
+            if (storedRole === 'admin') navigate('/admin-dashboard');
+            else navigate('/student-dashboard');
         } catch (err) {
             setError(err.message || 'An unknown error occurred during login.');
         } finally {

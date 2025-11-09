@@ -10,8 +10,14 @@ const Admin = require('../models/Admin');
  * @returns {string} The signed JWT.
  */
 const generateToken = (id, role) => {
+    // If JWT_EXPIRES_IN is a small number (seconds), override to a safer default for persistence
+    let expires = process.env.JWT_EXPIRES_IN || '7d';
+    if (/^\d+$/.test(String(expires)) && parseInt(expires, 10) < 3600) {
+        // Treat very small numeric values as accidental short expiry (e.g. 30s) -> use 7 days
+        expires = '7d';
+    }
     return jwt.sign({ id, role }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: expires,
     });
 };
 
@@ -31,6 +37,14 @@ exports.studentRegister = async (req, res) => {
         const student = await Student.create({ userId, password, name });
 
         if (student) {
+            const token = generateToken(student._id, 'student');
+            // Set token as HttpOnly cookie for persistent sessions
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+            });
+
             res.status(201).json({
                 success: true,
                 user: {
@@ -39,7 +53,7 @@ exports.studentRegister = async (req, res) => {
                     name: student.name,
                     role: 'student',
                 },
-                token: generateToken(student._id, 'student'),
+                token,
             });
         } else {
             res.status(400).json({ success: false, error: 'Invalid student data' });
@@ -60,6 +74,13 @@ exports.studentLogin = async (req, res) => {
         const student = await Student.findOne({ userId }).select('+password');
 
         if (student && (await student.matchPassword(password))) {
+            const token = generateToken(student._id, 'student');
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 1000 * 60 * 60 * 24 * 7,
+            });
+
             res.json({
                 success: true,
                 user: {
@@ -68,7 +89,7 @@ exports.studentLogin = async (req, res) => {
                     name: student.name,
                     role: 'student',
                 },
-                token: generateToken(student._id, 'student'),
+                token,
             });
         } else {
             res.status(401).json({ success: false, error: 'Invalid student ID or password' });
@@ -88,6 +109,13 @@ exports.adminLogin = async (req, res) => {
         const adminUser = await Admin.findOne({ userId }).select('+password');
 
         if (adminUser && (await adminUser.matchPassword(password))) {
+            const token = generateToken(adminUser._id, 'admin');
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 1000 * 60 * 60 * 24 * 7,
+            });
+
             res.json({
                 success: true,
                 user: {
@@ -96,7 +124,7 @@ exports.adminLogin = async (req, res) => {
                     name: adminUser.name,
                     role: 'admin',
                 },
-                token: generateToken(adminUser._id, 'admin'),
+                token,
             });
         } else {
             res.status(401).json({ success: false, error: 'Invalid admin ID or password' });
@@ -122,6 +150,13 @@ exports.adminRegister = async (req, res) => {
         const adminUser = await Admin.create({ userId, password, name });
 
         if (adminUser) {
+            const token = generateToken(adminUser._id, 'admin');
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 1000 * 60 * 60 * 24 * 7,
+            });
+
             res.status(201).json({
                 success: true,
                 user: {
@@ -130,12 +165,24 @@ exports.adminRegister = async (req, res) => {
                     name: adminUser.name,
                     role: 'admin',
                 },
-                token: generateToken(adminUser._id, 'admin'),
+                token,
             });
         } else {
             res.status(400).json({ success: false, error: 'Invalid admin data' });
         }
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+// @desc    Logout user (clear cookie)
+// @route   POST /api/auth/logout
+// @access  Public
+exports.logout = async (req, res) => {
+    try {
+        res.clearCookie('token');
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 };

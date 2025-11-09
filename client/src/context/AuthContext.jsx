@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {API_URL} from '../urls';
 
 const AuthContext = createContext({
@@ -47,6 +48,37 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
+    const navigate = useNavigate();
+
+    // Helper to safely parse JWT payload
+    const parseJwt = (token) => {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            return null;
+        }
+    };
+
+    // Monitor token for expiration and redirect to login if expired
+    useEffect(() => {
+        if (!authState.isLoading && authState.token) {
+            const payload = parseJwt(authState.token);
+            if (payload && payload.exp) {
+                const now = Math.floor(Date.now() / 1000);
+                if (payload.exp < now) {
+                    // token expired -> clear auth and send to login
+                    logout();
+                    navigate('/login');
+                }
+            }
+        }
+    }, [authState.token, authState.isLoading]);
+
     // --- 2. Login Function ---
     const login = async (userId, password, role) => {
         let endpoint = '';
@@ -61,6 +93,7 @@ export const AuthProvider = ({ children }) => {
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'include', // accept Set-Cookie from server
             body: JSON.stringify({ userId, password }),
         });
 
@@ -92,6 +125,11 @@ export const AuthProvider = ({ children }) => {
 
     // --- 3. Logout Function ---
     const logout = () => {
+        // Attempt to clear server cookie as well
+        try {
+            fetch(`${API_URL.AUTH}/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
+        } catch (e) {}
+
         setAuthState({
             user: null,
             token: null,
