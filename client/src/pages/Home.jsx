@@ -5,7 +5,7 @@ import Card from '../components/Card';
 import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
-  const { isAuthenticated, role } = useAuth();
+  // const { isAuthenticated, role } = useAuth();
 
   return (
     <main>
@@ -14,7 +14,7 @@ const Home = () => {
           Your platform for submitting and tracking institutional complaints and feedback.
         </p>
 
-        {!isAuthenticated ? (
+        {/* {!isAuthenticated ? ( */}
           <>
             <p style={{ marginBottom: '30px', textAlign: 'center', fontWeight: 'bold' }}>
               Please log in or sign up to continue.
@@ -28,14 +28,14 @@ const Home = () => {
               </Link>
             </div>
           </>
-        ) : (
+        {/* ) : (
           <div style={{ textAlign: 'center' }}>
             <p style={{ fontWeight: 'bold' }}>You're logged in.</p>
             <Link to={role === 'admin' ? '/admin-dashboard' : '/student-dashboard'} className="button">
               Go to Dashboard
             </Link>
           </div>
-        )}
+        )} */}
       </Card>
     </main>
   );

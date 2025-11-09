@@ -32,30 +32,30 @@ const Register = () => {
             return;
         }
 
-        try {
-            const response = await fetch(`${API_URL.AUTH}/student/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: formData.userId,
-                    name: formData.name,
-                    password: formData.password
-                }),
-            });
+        // try {
+        //     const response = await fetch(`${API_URL.AUTH}/student/register`, {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify({
+        //             userId: formData.userId,
+        //             name: formData.name,
+        //             password: formData.password
+        //         }),
+        //     });
 
-            const data = await response.json();
+        //     const data = await response.json();
 
-            if (response.ok && data.success) {
-                setSuccess('Registration successful! Redirecting to login...');
-                setTimeout(() => navigate('/login'), 2000);
-            } else {
-                setError(data.error || 'Registration failed.');
-            }
-        } catch (err) {
-            setError('Network error. Could not connect to the server.');
-        } finally {
-            setLoading(false);
-        }
+        //     if (response.ok && data.success) {
+        //         setSuccess('Registration successful! Redirecting to login...');
+        //         setTimeout(() => navigate('/login'), 2000);
+        //     } else {
+        //         setError(data.error || 'Registration failed.');
+        //     }
+        // } catch (err) {
+        //     setError('Network error. Could not connect to the server.');
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     return (

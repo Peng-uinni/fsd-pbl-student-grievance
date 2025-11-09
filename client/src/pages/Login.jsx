@@ -14,31 +14,31 @@ const Login = () => {
     const navigate = useNavigate();
 
     // Redirect authenticated users immediately
-    useEffect(()=>{
-        if (isAuthenticated) {
-            // If already authenticated, send to appropriate dashboard
-            const role = localStorage.getItem('role');
-            if (role === 'admin') navigate('/admin-dashboard');
-            else navigate('/student-dashboard');
-        }
-    }, [isAuthenticated, navigate])
+    // useEffect(()=>{
+    //     if (isAuthenticated) {
+    //         // If already authenticated, send to appropriate dashboard
+    //         const role = localStorage.getItem('role');
+    //         if (role === 'admin') navigate('/admin-dashboard');
+    //         else navigate('/student-dashboard');
+    //     }
+    // }, [isAuthenticated, navigate])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
-        try {
-            await login(userId, password, role);
-            // Read role from localStorage (login stores it) and redirect appropriately
-            const storedRole = localStorage.getItem('role');
-            if (storedRole === 'admin') navigate('/admin-dashboard');
-            else navigate('/student-dashboard');
-        } catch (err) {
-            setError(err.message || 'An unknown error occurred during login.');
-        } finally {
-            setLoading(false);
-        }
+        // try {
+        //     await login(userId, password, role);
+        //     // Read role from localStorage (login stores it) and redirect appropriately
+        //     const storedRole = localStorage.getItem('role');
+        //     if (storedRole === 'admin') navigate('/admin-dashboard');
+        //     else navigate('/student-dashboard');
+        // } catch (err) {
+        //     setError(err.message || 'An unknown error occurred during login.');
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     return (

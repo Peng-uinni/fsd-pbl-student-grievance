@@ -42,37 +42,37 @@ const ComplaintForm = () => {
     }
 
     setLoading(true);
-    try {
-      const headers = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
+    // try {
+    //   const headers = {};
+    //   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const response = await fetch(API_URL.COMPLAINT_FORM, {
-        method: 'POST',
-        headers,
-        credentials: 'include',
-        body: form,
-      });
+    //   const response = await fetch(API_URL.COMPLAINT_FORM, {
+    //     method: 'POST',
+    //     headers,
+    //     credentials: 'include',
+    //     body: form,
+    //   });
 
-      const data = await response.json().catch(() => ({}));
+    //   const data = await response.json().catch(() => ({}));
 
-      if (response.ok) {
-        setSuccessMessage(data.message || 'Complaint submitted successfully. Redirecting...');
-        // Reset form
-        setSubject('');
-        setCategory(CATEGORIES[0]);
-        setDescription('');
-        setPhotos([]);
+    //   if (response.ok) {
+    //     setSuccessMessage(data.message || 'Complaint submitted successfully. Redirecting...');
+    //     // Reset form
+    //     setSubject('');
+    //     setCategory(CATEGORIES[0]);
+    //     setDescription('');
+    //     setPhotos([]);
 
-        // After short delay (allow user to see message), redirect to dashboard
-        setTimeout(() => navigate('/student-dashboard'), 800);
-      } else {
-        setErrorMessage(data.error || `Submission failed (${response.status}).`);
-      }
-    } catch (err) {
-      setErrorMessage(err.message || 'Network error');
-    } finally {
-      setLoading(false);
-    }
+    //     // After short delay (allow user to see message), redirect to dashboard
+    //     setTimeout(() => navigate('/student-dashboard'), 800);
+    //   } else {
+    //     setErrorMessage(data.error || `Submission failed (${response.status}).`);
+    //   }
+    // } catch (err) {
+    //   setErrorMessage(err.message || 'Network error');
+    // } finally {
+    //   setLoading(false);
+    // }
 
   };
 

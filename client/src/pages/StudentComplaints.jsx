@@ -10,34 +10,34 @@ const StudentComplaints = () => {
   const [error, setError] = useState(null);
   const { getAuthHeader } = useAuth();
 
-  useEffect(() => {
-    const fetchComplaints = async () => {
-      try {
-        const response = await fetch(API_URL.MY_COMPLAINTS, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            ...getAuthHeader(),
-          }
-        });
+  // useEffect(() => {
+  //   const fetchComplaints = async () => {
+  //     try {
+  //       const response = await fetch(API_URL.MY_COMPLAINTS, {
+  //         method: 'GET',
+  //         credentials: 'include',
+  //         headers: {
+  //           ...getAuthHeader(),
+  //         }
+  //       });
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch complaints: ${response.status}`);
-        }
+  //       if (!response.ok) {
+  //         throw new Error(`Failed to fetch complaints: ${response.status}`);
+  //       }
 
-        const data = await response.json();
-        setStudentComplaints(data.data || []);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching complaints:', err);
-        setError('Failed to load complaints. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       const data = await response.json();
+  //       setStudentComplaints(data.data || []);
+  //       setError(null);
+  //     } catch (err) {
+  //       console.error('Error fetching complaints:', err);
+  //       setError('Failed to load complaints. Please try again later.');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchComplaints();
-  }, []);
+  //   fetchComplaints();
+  // }, []);
 
   return (
     <main>
