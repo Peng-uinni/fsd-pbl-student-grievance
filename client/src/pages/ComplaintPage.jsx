@@ -35,14 +35,6 @@ export default function ComplaintPage(){
     fetchComplaint();
   }, [])
 
-  // Function to format the date
-  const formatDate = (dateObj) => {
-    if (!dateObj || !dateObj.$date) return dateObj;
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit',
-    }).format(new Date(dateObj.$date));
-  };
-
   // Helper function for status badge color
   const getStatusColor = (status) => {
     switch (status) {
@@ -82,7 +74,7 @@ export default function ComplaintPage(){
           {[
             { label: 'Category', value: complaint.category },
             { label: 'Department', value: complaint.department },
-            { label: 'Created At', value: formatDate(complaint.createdAt) },
+            { label: 'Created At', value: new Date(complaint.createdAt).toLocaleDateString() },
             { label: 'Watchers', value: watchers.length},
           ].map((item, index) => (
             <div key={index} className="flex flex-col">

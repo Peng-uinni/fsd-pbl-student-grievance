@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Card from '../components/Card';
 import ComplaintItem from '../components/ComplaintItem';
-import { API_URL } from '../urls';
 
 const StudentComplaints = () => {
   const [studentComplaints, setStudentComplaints] = useState([]);
@@ -21,7 +20,7 @@ const StudentComplaints = () => {
         }
 
         const data = await response.json();
-        setStudentComplaints(data.data || []);
+        setStudentComplaints(data.body);
         setError(null);
       } catch (err) {
         console.error('Error fetching complaints:', err);

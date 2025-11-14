@@ -68,7 +68,7 @@ const Login = () => {
 
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            {role === 'student' ? 'Student ID/Reg No.' : 'Admin ID'}
+                            Email
                         </label>
                         <input
                             type="text"

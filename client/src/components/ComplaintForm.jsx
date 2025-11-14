@@ -1,7 +1,5 @@
 import { useContext, useState } from 'react';
 import Card from './Card';
-import "../urls"
-import { API_URL } from '../urls';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,10 +12,14 @@ const CATEGORIES = [
   'Other',
 ];
 
+const DEPARTMENTS = [
+  'CSE',
+];
+
 const ComplaintForm = () => {
   const [subject, setSubject] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
-  const [department, setDepartment] = useState('CSE');
+  const [department, setDepartment] = useState(DEPARTMENTS[0]);
   const [description, setDescription] = useState('');
   const [photos, setPhotos] = useState([]);
   const { token, user } = useContext(AuthContext);
@@ -29,7 +31,6 @@ const ComplaintForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear previous messages
     setSuccessMessage('');
     setErrorMessage('');
 
@@ -51,14 +52,15 @@ const ComplaintForm = () => {
         body: form,
       })
 
-      const data = res.json()
+      const data = await res.json();
+
       if(res.ok && data.success){
         setLoading(false);
+        navigate('/student-dashboard');
       }
     }catch(err){
       console.error(err);
     }
-
   };
 
   return (
@@ -98,13 +100,12 @@ const ComplaintForm = () => {
 
         <div className="form-group">
           <label htmlFor="description">Description</label>
-          <textarea
+          <input
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            rows="6"
             required
-          ></textarea>
+          />
         </div>
 
         <div className="form-group">

@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import Card from '../components/Card';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { API_URL } from '../urls';
 
 const Register = () => {
     const [formData, setFormData] = useState({
-        userId: '',
+        email: '',
         name: '',
         password: '',
         passwordConfirm: ''
@@ -34,11 +32,11 @@ const Register = () => {
         }
 
         try {
-            const response = await fetch(`${API_URL.AUTH}/student/register`, {
+            const response = await fetch('http://localhost:8080/api/auth/student/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    userId: formData.userId,
+                    email: formData.email,
                     name: formData.name,
                     password: formData.password
                 }),
@@ -69,8 +67,8 @@ const Register = () => {
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" disabled={loading}/>
                     </div>
                     <div>
-                        <label htmlFor="userId" className="block text-sm font-medium text-gray-700">Student ID/Reg No.</label>
-                        <input type="text" id="userId" value={formData.userId} onChange={handleChange} required
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="text" id="email" value={formData.email} onChange={handleChange} required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" disabled={loading}/>
                     </div>
                     <div>

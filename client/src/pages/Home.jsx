@@ -7,22 +7,25 @@ const Home = () => {
   const { isAuthenticated, role } = useContext(AuthContext);
 
   return (
-    <main>
-      <Card title="Welcome to GrievanceSite">
-        <p style={{ marginBottom: '20px', textAlign: 'center' }}>
+    <main className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+      <Card>
+         <h1 className="text-3xl font-bold text-center text-blue-700 mb-3">
+          Welcome to GrievanceSite </h1>
+        <p className= "mb-5 text-center text-gray-500">
           Your platform for submitting and tracking institutional complaints and feedback.
         </p>
 
         {!isAuthenticated ? (
           <>
-            <p style={{ marginBottom: '30px', textAlign: 'center', fontWeight: 'bold' }}>
-              Please log in or sign up to continue.
+            <p className="mb-8 text-center font-semibold text-gray-800">
+              To continue, Login or SignUp!
             </p>
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-              <Link to="/login" className="button" style={{ textDecoration: 'none' }}>
+
+            <div className='flex justify-center gap-5'>
+              <Link to="/login" className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                 Login
               </Link>
-              <Link to="/signup" className="button" style={{ textDecoration: 'none' }}>
+              <Link to="/signup" className="px-6 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 hover:shadow-lg transition-all">
                 Sign Up
               </Link>
             </div>

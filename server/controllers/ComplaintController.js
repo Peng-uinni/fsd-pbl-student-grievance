@@ -38,7 +38,7 @@ exports.createComplaint = async (req, res) => {
 
         res.status(201).json({
             success: true,
-            data: complaint
+            body: complaint
         });
     } catch (error) {
         console.log("[CREATE COMPLAINT] FAIL");
@@ -60,7 +60,7 @@ exports.getStudentComplaints = async (req, res) => {
         res.status(200).json({
             success: true,
             count: complaints.length,
-            data: complaints
+            body: complaints
         });
     } catch (error) {
         console.error(error);
@@ -79,7 +79,7 @@ exports.getAllComplaints = async (req, res) => {
         res.status(200).json({
             success: true,
             count: complaints.length,
-            data: complaints
+            body: complaints
         });
     } catch (error) {
         console.error(error);

@@ -1,19 +1,7 @@
-// src/components/Card.js
-import React from 'react';
-
-const Card = ({ title, children, style }) => {
+const Card = ({ title, children}) => {
   return (
-    <div style={{
-      backgroundColor: 'var(--white)',
-      padding: '30px',
-      borderRadius: 'var(--border-radius)',
-      boxShadow: 'var(--shadow)',
-      maxWidth: '500px',
-      width: '100%',
-      margin: '20px 0',
-      ...style,
-    }}>
-      {title && <h2 style={{ marginBottom: '20px', textAlign: 'center', color: 'var(--primary-color)' }}>{title}</h2>}
+    <div className="bg-white shadow-lg rounded-2xl p-8 max-w-xl w-full mx-auto">
+      {title && <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">{title}</h2>}
       {children}
     </div>
   );

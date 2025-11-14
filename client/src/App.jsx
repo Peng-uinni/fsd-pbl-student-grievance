@@ -42,9 +42,9 @@ const App = () => {
 
           {/* Admin Routes */}
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/all-complaints" element={<AllComplaints />} />
 
           {/* Complaint Pages */}
+          <Route path="/all-complaints" element={<AllComplaints />} />
           <Route path="/complaint/:complaintId" element={<ComplaintPage/>}/>
 
           {/* Catch-all for 404 */}
