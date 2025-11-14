@@ -2,42 +2,37 @@ import { useEffect, useState } from 'react';
 import Card from '../components/Card';
 import ComplaintItem from '../components/ComplaintItem';
 import { API_URL } from '../urls';
-import { useAuth } from '../context/AuthContext';
 
 const StudentComplaints = () => {
   const [studentComplaints, setStudentComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { getAuthHeader } = useAuth();
 
-  // useEffect(() => {
-  //   const fetchComplaints = async () => {
-  //     try {
-  //       const response = await fetch(API_URL.MY_COMPLAINTS, {
-  //         method: 'GET',
-  //         credentials: 'include',
-  //         headers: {
-  //           ...getAuthHeader(),
-  //         }
-  //       });
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/complaint/me', {
+          method: 'GET',
+          credentials: 'include',
+        });
 
-  //       if (!response.ok) {
-  //         throw new Error(`Failed to fetch complaints: ${response.status}`);
-  //       }
+        if (!response.ok) {
+          throw new Error(`Failed to fetch complaints: ${response.status}`);
+        }
 
-  //       const data = await response.json();
-  //       setStudentComplaints(data.data || []);
-  //       setError(null);
-  //     } catch (err) {
-  //       console.error('Error fetching complaints:', err);
-  //       setError('Failed to load complaints. Please try again later.');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+        const data = await response.json();
+        setStudentComplaints(data.data || []);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching complaints:', err);
+        setError('Failed to load complaints. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchComplaints();
-  // }, []);
+    fetchComplaints();
+  }, []);
 
   return (
     <main>

@@ -12,6 +12,11 @@ const ComplaintSchema = new mongoose.Schema({
     required: [true, 'Please select a category'],
     enum: ['Academic', 'Administration', 'Hostel/Mess', 'Infrastructure', 'Disciplinary', 'Other'],
   },
+  department: {
+    type: String,
+    required: true,
+    enum: ['CSE']
+  },
   description: {
     type: String,
     required: [true, 'Please provide a detailed description']
@@ -25,19 +30,28 @@ const ComplaintSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  watchers: {
+    //for multiple people with the same problem
+    type: [String],
+    default: []
+  },
 
-  userId: {
+  userEmail: {
     type: String, 
     required: true,
   },
-  userName: {
-    type: String,
-    default: 'Unknown User'
-  },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   }
 });
+
+ComplaintSchema.methods.addWatcher = async (watcherEmail) => {
+  this.watchers.push(watcherEmail);
+}
+
+ComplaintSchema.methods.updateStatus = async (updatedStatus) => {
+  this.status = updatedStatus;
+}
 
 module.exports = mongoose.model('Complaint', ComplaintSchema);

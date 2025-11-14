@@ -1,44 +1,41 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Card from '../components/Card';
-import { useAuth } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const [userId, setUserId] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('student');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const { login, isAuthenticated } = useAuth();
+    const user = useContext(AuthContext);
     const navigate = useNavigate();
 
     // Redirect authenticated users immediately
-    // useEffect(()=>{
-    //     if (isAuthenticated) {
-    //         // If already authenticated, send to appropriate dashboard
-    //         const role = localStorage.getItem('role');
-    //         if (role === 'admin') navigate('/admin-dashboard');
-    //         else navigate('/student-dashboard');
-    //     }
-    // }, [isAuthenticated, navigate])
+    useEffect(()=>{
+        if (user.isAuthenticated) {
+            // If already authenticated, send to appropriate dashboard
+            if (user.role === 'admin') navigate('/admin-dashboard');
+            else navigate('/student-dashboard');
+        }
+    }, [user.isAuthenticated, navigate])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
-        // try {
-        //     await login(userId, password, role);
-        //     // Read role from localStorage (login stores it) and redirect appropriately
-        //     const storedRole = localStorage.getItem('role');
-        //     if (storedRole === 'admin') navigate('/admin-dashboard');
-        //     else navigate('/student-dashboard');
-        // } catch (err) {
-        //     setError(err.message || 'An unknown error occurred during login.');
-        // } finally {
-        //     setLoading(false);
-        // }
+        try {
+            await user.login(email, password, role);
+            if (user.role === 'admin') navigate('/admin-dashboard');
+            else navigate('/student-dashboard');
+        } catch (err) {
+            setError(err.message || 'An unknown error occurred during login.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -70,14 +67,14 @@ const Login = () => {
 
 
                     <div>
-                        <label htmlFor="userId" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                             {role === 'student' ? 'Student ID/Reg No.' : 'Admin ID'}
                         </label>
                         <input
                             type="text"
-                            id="userId"
-                            value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             disabled={loading}

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const getStatusColor = (status) => {
   switch (status) {
     case 'Pending': return '#ff9800'; // Amber
@@ -10,7 +12,10 @@ const getStatusColor = (status) => {
 const ComplaintItem = ({ complaint }) => (
   <div style={{ border: '1px solid #ddd', padding: '15px', marginBottom: '15px', borderRadius: '4px' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-      <h4 style={{ margin: 0, color: 'var(--primary-color)' }}>{complaint.subject}</h4>
+      <Link to={"/complaint/"+complaint._id}>
+        <h4 style={{ margin: 0, color: 'var(--primary-color)' }}>{complaint.subject}</h4>
+      </Link>
+      
       <span style={{
         fontWeight: 'bold',
         color: getStatusColor(complaint.status),
@@ -24,7 +29,7 @@ const ComplaintItem = ({ complaint }) => (
     </div>
 
     <p style={{ fontSize: '0.9em', color: '#666' }}>
-      **Category:** {complaint.category} | **Filed On:** {complaint.date}
+      Category: {complaint.category} | **Filed On:** {complaint.date}
     </p>
 
     <details style={{ marginTop: '10px' }}>

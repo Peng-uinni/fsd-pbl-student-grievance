@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Card from './Card';
 import "../urls"
 import { API_URL } from '../urls';
-import { useAuth } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const CATEGORIES = [
@@ -17,9 +17,10 @@ const CATEGORIES = [
 const ComplaintForm = () => {
   const [subject, setSubject] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
+  const [department, setDepartment] = useState('CSE');
   const [description, setDescription] = useState('');
   const [photos, setPhotos] = useState([]);
-  const { token, user } = useAuth();
+  const { token, user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -37,42 +38,26 @@ const ComplaintForm = () => {
     form.append('subject', subject);
     form.append('category', category);
     form.append('description', description);
+    form.append('department', department);
     if (photos && photos.length) {
       photos.forEach((file) => form.append('photos', file));
     }
 
     setLoading(true);
-    // try {
-    //   const headers = {};
-    //   if (token) headers['Authorization'] = `Bearer ${token}`;
+    try{
+      const res = await fetch("http://localhost:8080/api/complaint/create",{
+        method: 'POST',
+        credentials: 'include',
+        body: form,
+      })
 
-    //   const response = await fetch(API_URL.COMPLAINT_FORM, {
-    //     method: 'POST',
-    //     headers,
-    //     credentials: 'include',
-    //     body: form,
-    //   });
-
-    //   const data = await response.json().catch(() => ({}));
-
-    //   if (response.ok) {
-    //     setSuccessMessage(data.message || 'Complaint submitted successfully. Redirecting...');
-    //     // Reset form
-    //     setSubject('');
-    //     setCategory(CATEGORIES[0]);
-    //     setDescription('');
-    //     setPhotos([]);
-
-    //     // After short delay (allow user to see message), redirect to dashboard
-    //     setTimeout(() => navigate('/student-dashboard'), 800);
-    //   } else {
-    //     setErrorMessage(data.error || `Submission failed (${response.status}).`);
-    //   }
-    // } catch (err) {
-    //   setErrorMessage(err.message || 'Network error');
-    // } finally {
-    //   setLoading(false);
-    // }
+      const data = res.json()
+      if(res.ok && data.success){
+        setLoading(false);
+      }
+    }catch(err){
+      console.error(err);
+    }
 
   };
 

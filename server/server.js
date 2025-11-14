@@ -4,8 +4,6 @@ const cors = require('cors');
 const path = require('path')
 const cookieParser = require('cookie-parser');
 
-const bcrypt = require('bcryptjs');
-
 const connectDB = require('./config/db');
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') }); 
@@ -33,8 +31,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // --- Routes ---
 const complaintRoutes = require('./routes/ComplaintRoutes');
 const authRoutes = require('./routes/AuthRoutes');
-app.use('/api/complaints', complaintRoutes);
+const chatRoutes = require('./routes/ChatRoutes');
+app.use('/api/complaint', complaintRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/chat', chatRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');

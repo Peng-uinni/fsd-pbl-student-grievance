@@ -1,45 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../components/Card';
 import ComplaintItem from '../components/ComplaintItem';
-import { API_URL } from '../urls';
-import { useAuth } from '../context/AuthContext';
 
 const StudentDashboard = () => {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { getAuthHeader } = useAuth();
 
-  // useEffect(() => {
-  //   const fetchComplaints = async () => {
-  //     try {
-  //       const response = await fetch(API_URL.MY_COMPLAINTS, {
-  //         credentials: 'include',
-  //         headers: {
-  //           ...getAuthHeader(),
-  //         }
-  //       });
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/complaint/me", {
+          method: 'GET',
+          credentials: 'include',
+        });
 
-  //       if (!response.ok) throw new Error('Failed to fetch complaints');
-  //       const data = await response.json();
-  //       setComplaints(data.data || []);
-  //     } catch (err) {
-  //       setError(err.message);
-  //       console.error('Error fetching complaints:', err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+        if (!response.ok) throw new Error('Failed to fetch complaints');
+        const data = await response.json();
+        setComplaints(data.data || []);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching complaints:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchComplaints();
-  // }, []);
+    fetchComplaints();
+  }, []);
 
   // Calculate stats
-  // const stats = complaints.reduce((acc, complaint) => {
-  //   acc[complaint.status] = (acc[complaint.status] || 0) + 1;
-  //   return acc;
-  // }, {});
+  const stats = complaints.reduce((acc, complaint) => {
+    acc[complaint.status] = (acc[complaint.status] || 0) + 1;
+    return acc;
+  }, {});
 
   return (
     <main>

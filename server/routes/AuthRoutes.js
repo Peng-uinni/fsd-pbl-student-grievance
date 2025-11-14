@@ -3,7 +3,8 @@ const {
     studentRegister, 
     studentLogin, 
     adminLogin, 
-    adminRegister 
+    adminRegister,
+    logout
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -11,10 +12,12 @@ const router = express.Router();
 // Student routes
 router.post('/student/register', studentRegister);
 router.post('/student/login', studentLogin);
-router.post('/logout', require('../controllers/authController').logout);
 
 // Admin routes
 router.post('/admin/login', adminLogin);
 router.post('/admin/register', adminRegister); 
+
+// Common routes
+router.post('/logout', logout);
 
 module.exports = router;

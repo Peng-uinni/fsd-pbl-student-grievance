@@ -2,24 +2,23 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const Student = mongoose.Schema({
-    userId: { 
+    email: { 
         type: String,
-        required: [true, 'Please add a user ID/Registration number'],
+        required: true,
         unique: true,
-        trim: true,
-    },
-    password: {
-        type: String,
-        required: [true, 'Please add a password'],
-        minlength: 6,
-        // select: false,
+        // trim: true,
     },
     name: {
         type: String,
-        required: [true, 'Please add a name'],
+        required: true,
     },
-}, {
-    timestamps: true
+    password: {
+        type: String,
+        required: true,
+        select: false,
+    },
+},{
+    timestamps: true,
 });
 
 // Middleware to hash the password before saving

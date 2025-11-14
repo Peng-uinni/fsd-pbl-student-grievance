@@ -10,7 +10,7 @@ const Footer = () => {
       padding: '10px 20px',
       marginTop: 'auto',
     }}>
-      <p>&copy; {new Date().getFullYear()} GrievanceSite. All rights reserved.</p>
+  
     </footer>
   );
 };

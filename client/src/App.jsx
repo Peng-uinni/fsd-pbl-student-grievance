@@ -13,6 +13,7 @@ import ComplaintForm from './components/ComplaintForm';
 import AllComplaints from './pages/AllComplaints';
 
 import AuthProvider from './context/AuthContext';
+import ComplaintPage from './pages/ComplaintPage';
 
 // Simple Not Found Page
 const NotFound = () => (
@@ -25,10 +26,11 @@ const NotFound = () => (
 
 const App = () => {
   return (
-    <Router>
-      {/* <AuthProvider> */}
+    <AuthProvider>
+      <Router>
         <Header />
         <Routes>
+          {/* Auth Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -42,12 +44,15 @@ const App = () => {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/all-complaints" element={<AllComplaints />} />
 
+          {/* Complaint Pages */}
+          <Route path="/complaint/:complaintId" element={<ComplaintPage/>}/>
+
           {/* Catch-all for 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
-      {/* </AuthProvider> */}
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 };
 

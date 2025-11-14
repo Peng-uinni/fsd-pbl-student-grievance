@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const Admin = mongoose.Schema({
-    userId: { // Unique identifier for Admin login (e.g., staff ID or email)
+    email: { // Unique identifier for Admin login (e.g., staff ID or email)
         type: String,
-        required: [true, 'Please add a user ID for admin'],
+        required: [true, 'Please add an email'],
         unique: true,
         trim: true,
     },
@@ -12,7 +12,7 @@ const Admin = mongoose.Schema({
         type: String,
         required: [true, 'Please add a password'],
         minlength: 6,
-        // select: false,
+        select: false,
     },
     name: {
         type: String,
