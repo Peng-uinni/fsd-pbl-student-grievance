@@ -1,3 +1,9 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
 :root {
   --primary-color: #3f51b5;
   --secondary-color: #f5f5f5; 
@@ -20,7 +26,7 @@ body {
   color: var(--text-color);
 }
 
-/* --- Layout --- */
+/* --- Layout --- 
 #root {
   display: flex;
   flex-direction: column;
@@ -32,10 +38,10 @@ main {
   padding: 20px;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align content to the top */
+  align-items: flex-start; /* Align content to the top 
 }
 
-/* --- Buttons --- */
+/* --- Buttons --- 
 button, .button {
   background-color: var(--primary-color);
   color: var(--white);
@@ -56,7 +62,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* --- Forms & Inputs --- */
+/* --- Forms & Inputs --- 
 .form-group {
   margin-bottom: 15px;
 }
@@ -78,3 +84,4 @@ select {
   border-radius: 4px;
   font-size: 16px;
 }
+*/
