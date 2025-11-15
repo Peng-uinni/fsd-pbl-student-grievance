@@ -64,16 +64,19 @@ const ComplaintForm = () => {
   };
 
   return (
-    <Card title="File a New Complaint" style={{ maxWidth: '700px', margin: '40px auto' }}>
-      <form onSubmit={handleSubmit}>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
+    <Card title="File a New Complaint" className="text-2xl font-semibold text-center text-blue-700 mb-6">
+      <form className="space-y-5" onSubmit={handleSubmit}>
         {successMessage && (
-          <div className="success-message" style={{ color: 'green', marginBottom: '10px' }}>{successMessage}</div>
+          <div className="text-green-600 mb-3">{successMessage}</div>
         )}
         {errorMessage && (
-          <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{errorMessage}</div>
+          <div className="text-red-600 mb-3">{errorMessage}</div>
         )}
-        <div className="form-group">
-          <label htmlFor="subject">Subject</label>
+
+{/* For SUBJECT */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1" htmlFor="subject">Subject</label>
           <input
             type="text"
             id="subject"
@@ -81,16 +84,19 @@ const ComplaintForm = () => {
             onChange={(e) => setSubject(e.target.value)}
             required
             maxLength="100"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="category">Category</label>
+{/* For CATEGORYYY */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1" htmlFor="category">Category</label>
           <select
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-white ocus:ring-blue-500 focus:outline-none"
           >
             {CATEGORIES.map((cat) => (
               <option key={cat} value={cat}>{cat}</option>
@@ -98,36 +104,83 @@ const ComplaintForm = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="description">Description</label>
+{/* DESCRITPTION */}
+
+        <div>
+          <label className="block text-gray-700 font-medium mb-1" htmlFor="description">Description</label>
           <input
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="photos">Upload Supporting Photos (Optional)</label>
+{/* PHOTOS */}
+<div className="mb-4">
+  <label
+    className="block text-gray-700 font-medium mb-1"
+    htmlFor="photos"
+  >
+    Upload Photos (Optional)
+  </label>
+
+  {/* Styled clickable upload box */}
+  <label
+    htmlFor="photos"
+    className="cursor-pointer border-2 border-dashed border-gray-400 rounded-md 
+               px-4 py-3 text-gray-600 text-sm inline-block w-full
+               hover:border-blue-500 transition"
+  >
+    Choose Files
+  </label>
+
+  {/* Hidden file input */}
+  <input
+    type="file"
+    id="photos"
+    accept="image/*"
+    multiple
+    onChange={(e) => setPhotos(Array.from(e.target.files))}
+    className="hidden"
+  />
+
+  {photos && photos.length > 0 && (
+    <small className="text-gray-600 text-sm mt-1 block">
+      Selected file{photos.length > 1 ? 's' : ''}:{" "}
+      {photos.map((f) => f.name).join(", ")}
+    </small>
+  )}
+</div>
+
+
+
+        {/* <div>
+          <label className="block text-gray-700 font-medium mb-1" htmlFor="photos">Upload Photos (Optional)</label>
           <input
             type="file"
             id="photos"
             accept="image/*"
             multiple
             onChange={(e) => setPhotos(Array.from(e.target.files))}
+            className="cw-full text-sm text-gray-600"
           />
           {photos && photos.length > 0 && (
-            <small style={{ display: 'block', marginTop: '5px' }}>
+            <small className="text-gray-600 text-sm mt-1">
               Selected file{photos.length > 1 ? 's' : ''}: {photos.map(f => f.name).join(', ')}
             </small>
           )}
-        </div>
-        <button type="submit" disabled={loading} style={{ width: '100%', marginTop: '20px' }}>
+        </div> */}
+
+ {/* SUBMIT */}
+        <button type="submit" disabled={loading} 
+        className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition-all duration-200">
           {loading ? 'Submitting...' : 'Submit Complaint'}
         </button>
       </form>
     </Card>
+    </div>
   );
 };
 
